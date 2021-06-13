@@ -95,6 +95,11 @@ resource "kubernetes_deployment" "pihole" {
 						name = "pihole-local-dnsmasq-volume"
 						mount_path = "/etc/dnsmasq.d"
 					}
+					security_context {
+						capabilities {
+							add = [ "NET_ADMIN" ]
+						}
+					}
 				}
 				volume {
 					name = "pihole-local-etc-volume"
