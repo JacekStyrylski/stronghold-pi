@@ -77,6 +77,7 @@ resource "kubernetes_deployment" "pihole" {
 					name = local.pi_hole-app_name
 					image = "pihole/pihole:latest"
 					image_pull_policy = "Always"
+
 					env_from {
 						secret_ref {
 							name = kubernetes_secret.pihole.metadata[0].name
@@ -96,11 +97,16 @@ resource "kubernetes_deployment" "pihole" {
 						mount_path = "/etc/dnsmasq.d"
 					}
 					security_context {
+						privileged = true
+						
 						capabilities {
 							add = [ "NET_ADMIN" ]
 						}
 					}
 				}
+				
+				host_network = true
+				
 				volume {
 					name = "pihole-local-etc-volume"
 					persistent_volume_claim {
